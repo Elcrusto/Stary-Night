@@ -1,0 +1,102 @@
+#include <FastLED.h>
+
+
+#define DATA_PIN    3
+//#define CLK_PIN   4
+#define LED_TYPE    WS2811
+#define COLOR_ORDER GRB
+#define NUM_LEDS    10
+CRGB leds[NUM_LEDS];
+
+#define BRIGHTNESS          96
+#define FRAMES_PER_SECOND  120
+
+//---------------------------------------------------------------------------//
+int   in[128];
+int red= 0;
+int blue= 0;
+int green= 0;
+int numLEDs = 10;
+long randNumber;
+long randNumber1;
+
+void setup() {
+  Serial.begin(9600);
+  delay(3000);
+  FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+  FastLED.setBrightness(BRIGHTNESS);
+  randomSeed(analogRead(0));
+  }
+
+  void fadein() {
+//fade out
+while (red<255){
+leds[randNumber] = CRGB(red, green, blue);
+leds[randNumber1] = CRGB(red, green, blue);
+    FastLED.show();
+    red = red+1;
+    green = green+1;
+    blue = blue+1;
+    Serial.print(red);
+    Serial.println("  ");
+  
+  if (red>225) {
+      red = 255;
+  }    
+  if (green>225) {
+      green = 255;
+  }    
+  if (blue>225) {
+      blue = 255;
+  }    
+
+}
+  }
+void fadeout() {
+while (red>0){
+leds[randNumber] = CRGB(red, green, blue);
+leds[randNumber1] = CRGB(red, green, blue);
+    FastLED.show();
+    red = red-1;
+    green = green-1;
+    blue = blue-1;
+    Serial.print(red);
+    Serial.println("  ");
+  
+  if (red<0) {
+      red = 0;
+  }    
+  if (green<0) {
+      green = 0;
+  }    
+  if (blue<0) {
+      blue = 0;
+  }    
+
+}
+}
+
+void gen(){
+  randomSeed(analogRead(A0));
+  randNumber = random(11);
+  randNumber1 = random(11);
+  int delayValue = random(50);
+  delay((unsigned long)delayValue);
+}
+
+void loop() {
+
+//red=random(256);
+//green=random(256);
+//blue=random(256);
+gen();
+fadein();
+fadeout();
+delay(500);
+
+
+//nebula function
+//shooting star function
+
+
+}
