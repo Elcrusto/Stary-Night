@@ -1,0 +1,85 @@
+#include <FastLED.h>
+
+#define DATA_PIN    3
+#define LED_TYPE    WS2811
+#define COLOR_ORDER GRB
+#define NUM_LEDS    150
+CRGB leds[NUM_LEDS];
+
+#define BRIGHTNESS          96
+#define FRAMES_PER_SECOND  120
+int stime = 10;
+int s = 0;
+int n = 0;
+int j = 0;
+int ntime = 10000;
+uint8_t fadeValue = 0;
+uint8_t gHue = 100;
+
+void setup() {
+  delay(3000); // 3 second delay for recovery
+  
+  FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+  
+  FastLED.setBrightness(BRIGHTNESS);
+}
+
+
+void gen(CRGB color, int delayTime) {
+  fadeToBlackBy(leds, NUM_LEDS, 15);
+  int pos = random16(NUM_LEDS);
+  
+  // Gradually increase the brightness of the white LED
+  for (int i = 0; i <= 255; i++) {
+    fadeValue = i;
+    leds[pos] = CRGB(fadeValue, fadeValue, fadeValue);
+    FastLED.show();
+    delay(delayTime / 255);  // Delay for a short duration based on the fade speed
+  }
+}
+
+
+void star() {
+  s = s + 1;
+  if (s == stime){
+  int start = random16(NUM_LEDS - 1);
+  int end = start + 40;
+
+  while (start != end) {
+  leds[start].fadeToBlackBy(20);
+  leds[start % NUM_LEDS] = CRGB(255, 255, 255);    
+  FastLED.show();
+  start += 1;
+  delay(5);
+    }
+      s = 0;
+
+  }
+}
+
+
+//void fade(int start, int end) {
+  //fix this to make the code look better
+  //int j = 0;
+  //while (j < 12) {
+  
+  //int h = start;
+  //while (h != end)
+  //{
+    //leds[h].fadeToBlackBy(20);
+    //FastLED.show();
+    //h += 1;
+  //}
+     // j += 1;
+  //}
+//}
+
+
+
+
+void loop() {
+  gen(CRGB::White, 1000);
+  FastLED.show();
+  FastLED.delay(1000 / FRAMES_PER_SECOND);
+  star();
+}
